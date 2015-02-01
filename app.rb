@@ -21,7 +21,7 @@ get "/:resolution/:input" do
   human_integer = "#{input_integer} " if input_integer > 0
 
   if decimals[input_decimal]
-    output += "exactly #{human_integer}#{decimals[input_decimal]} inches"
+    output += "exactly <b#{human_integer}#{decimals[input_decimal]}</b> inches"
   else
     min = nil
     max = nil
@@ -33,7 +33,7 @@ get "/:resolution/:input" do
 
     decimals[min] = "0" if min == 0 and input_integer == 0
 
-    output += "between <b>#{human_integer}#{decimals[min]}</b> and <b>#{human_integer}#{decimals[max]}</b> "
+    output += "between <b>#{human_integer}#{decimals[min]}</b> and <b>#{human_integer}#{decimals[max]}</b> inches "
 
     output += "(#{input_integer + min} and #{input_integer + max})"
   end
