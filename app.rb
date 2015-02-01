@@ -7,9 +7,14 @@ get "/:resolution/:input" do
   decimals = { 0.0 => "" }
 
   resolution.times do |i|
+    # calculate decimal
     decimal = i.next.to_f / resolution.to_f
 
-    decimals[decimal] = decimal.to_r.to_s
+    # fraction, at current resolution
+    decimals[decimal] = "#{i.next}/#{resolution}"
+
+    # fraction, at lowest resolution
+    decimals[decimal] += " (#{decimal.to_r})" unless decimal.to_r.denominator == resolution
   end
 
   # split input into integer and decimal
@@ -17,11 +22,11 @@ get "/:resolution/:input" do
 
   output = "At a resolution of 1/#{resolution},<br><br> #{input} is "
 
-  # use whole integer as fraction prefix
+  # use whole integer as fractional prefix
   human_integer = "#{input_integer} " if input_integer > 0
 
   if decimals[input_decimal]
-    output += "exactly <b#{human_integer}#{decimals[input_decimal]}</b> inches"
+    output += "exactly <b>#{human_integer}#{decimals[input_decimal]}</b> inches "
   else
     min = nil
     max = nil
@@ -33,7 +38,10 @@ get "/:resolution/:input" do
 
     decimals[min] = "0" if min == 0 and input_integer == 0
 
-    output += "between <b>#{human_integer}#{decimals[min]}</b> and <b>#{human_integer}#{decimals[max]}</b> inches "
+    min_human = "#{human_integer}#{decimals[min]}"
+    max_human = "#{human_integer}#{decimals[max]}"
+
+    output += "between <b>#{min_human}</b> and <b>#{max_human}</b> inches "
 
     output += "(#{input_integer + min} and #{input_integer + max})"
   end
